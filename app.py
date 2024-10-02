@@ -6,7 +6,7 @@ import logging
 app = Flask(__name__)
 
 # Use your API key directly
-GEMINI_API_KEY = "AIzaSyDFfv14macmMsjXT9CZHOtwWM2A8v5arhg"
+GEMINI_API_KEY = "(Private)"
 genai.configure(api_key=GEMINI_API_KEY)
 
 # Configure the model
