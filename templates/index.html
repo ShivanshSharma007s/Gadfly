@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gadfly</title>
+    <style>
+        /* Existing Styles... */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffffff, #ffffff);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh; /* Full height */
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 200px; /* Expanded width of the sidebar */
+            background-color: #000; /* Black background */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align items to the left */
+            justify-content: flex-start; /* Start from the top */
+            padding: 20px;
+            position: relative; /* Allow positioning of button */
+            transition: width 0.3s ease; /* Animation for width */
+            z-index: 1000; /* Keep it above other content */
+            overflow-y: auto; /* Enable vertical scroll if needed */
+        }
+
+        /* New Styles for Top Buttons */
+        .top-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px; /* Space below the buttons */
+        }
+
+        /* Adjust New Chat Button */
+        .new-chat-btn {
+            background: url('static/newchat.png') no-repeat center center;
+            background-size: contain; /* Ensure the image fits */
+            width: 40px; /* Adjusted width */
+            height: 40px; /* Adjusted height */
+            border: none; /* Remove border */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: transform 0.3s ease; /* Animation for hover effect */
+        }
+
+        .new-chat-btn:hover {
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+
+        .new-chat-btn.hidden {
+            display: none; /* Hide the button */
+        }
+
+        /* Adjust Hamburger Menu */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            cursor: pointer;
+            width: 30px; /* Width of the hamburger icon */
+            height: 25px; /* Height of the hamburger icon */
+            transition: transform 0.3s ease; /* Smooth transition */
+        }
+
+        .hamburger .line {
+            width: 100%; /* Full width */
+            height: 3px; /* Height of the lines */
+            background-color: white; /* Color of the lines */
+            border-radius: 2px; /* Rounded corners for the lines */
+        }
+
+        /* Remove existing margins from buttons */
+        .sidebar .new-chat-btn,
+        .sidebar .hamburger {
+            margin-top: 0;
+            margin-left: 0;
+            margin-bottom: 0;
+        }
+
+        /* Rest of your existing CSS remains unchanged */
+        .chat-box {
+            background-color: #000000; /* Darker background for a sleek look */
+            color: white; /* White text */
+            padding: 20px 30px; /* Increase padding for more space inside */
+            border-radius: 10px; /* Larger border radius for more rounded corners */
+            width: 100%; /* Full width of the sidebar */
+            text-align: center; /* Center the text */
+            margin-top: 20px; /* Space from the top */
+            cursor: default; /* Default cursor */
+            user-select: none; /* Prevent text selection */
+            font-size: 1.2em; /* Slightly increase the font size */
+            font-weight: bold; /* Make the text bold */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+            letter-spacing: 0.5px; /* Add a slight letter spacing */
+        }
+
+        .chat-list {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .chat-item {
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative; /* For positioning the close button */
+        }
+
+        .chat-item:hover, .chat-item.active {
+            background-color: #555;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full height */
+            width: calc(100% - 200px); /* Initial width for sidebar */
+            transition: width 0.3s ease; /* Animation for width */
+            overflow: hidden; /* Hide overflow */
+            position: relative; /* Adjust for sidebar expansion */
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f0f2f5; /* Light background for header */
+            position: relative; /* For positioning share and exit buttons */
+        }
+
+        .header img {
+            width: 40px; /* Adjust size of image */
+            height: 40px; /* Adjust size of image */
+            margin-right: 10px; /* Space between image and text */
+            border-radius: 50%; /* Round image */
+        }
+
+        .help-btn {
+            background: url('static/help.png') no-repeat center center; /* Set the share icon */
+            background-size: cover; /* Ensure the icon fills the button */
+            width: 45px; /* Set equal width for a square shape */
+            height: 45px; /* Set equal height for a square shape */
+            border: none; /* Remove border */
+            cursor: pointer; /* Pointer cursor on hover */
+            position: absolute; /* Position it absolutely */
+            right: 140px; /* Position from the right */
+            top: 17px; /* Position from the top */
+            z-index: 10; /* Keep it above other elements */
+        }
+
+        .help-btn:hover {
+            opacity: 0.8; /* Change opacity on hover for visual feedback */
+        }
+
+
+        .share-btn {
+            background: url('static/share.png') no-repeat center center; /* Set the share icon */
+            background-size: cover; /* Ensure the icon fills the button */
+            width: 40px; /* Set equal width for a square shape */
+            height: 40px; /* Set equal height for a square shape */
+            border: none; /* Remove border */
+            cursor: pointer; /* Pointer cursor on hover */
+            position: absolute; /* Position it absolutely */
+            right: 80px; /* Position from the right */
+            top: 20px; /* Position from the top */
+            z-index: 10; /* Keep it above other elements */
+        }
+
+        .share-btn:hover {
+            opacity: 0.8; /* Change opacity on hover for visual feedback */
+        }
+
+        .exit-btn {
+            background: url('static/exit.png') no-repeat center center; /* Set the exit icon */
+            background-size: contain; /* Ensure the icon fits within the button */
+            width: 45px; /* Width of the exit button */
+            height: 40px; /* Height of the exit button */
+            border: none; /* Remove border */
+            cursor: pointer; /* Pointer cursor on hover */
+            position: absolute; /* Position it absolutely */
+            right: 20px; /* Position from the right */
+            top: 20px; /* Position from the top */
+            z-index: 10; /* Keep it above other elements */
+        }
+
+        .exit-btn:hover {
+            opacity: 0.8; /* Change opacity on hover for visual feedback */
+        }
+
+        .chat-window {
+            flex: 1;
+            padding: 20px;
+            background-color: #f0f2f5;
+            overflow-y: auto; /* Enable vertical scroll */
+            margin: 0; /* Remove margin */
+            position: relative; /* For positioning the intro message */
+        }
+
+        /* Updated Introductory Message Styles */
+        .bard-hello {
+    display: block; /* Make the span behave like a block element */
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 5vw; /* Increased font size to 5% of viewport width */
+    font-weight: bold;
+    font-family: 'Roboto', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    opacity: 0;
+    animation: fadeInUp 1s forwards;
+    z-index: 1; /* Ensure it appears above messages */
+    color: transparent; /* Make text transparent for gradient */
+    background: linear-gradient(45deg,  #22c1c3 20%, #41c0ae 40%,#6bbf92 60%, #8abe7d 80%,#fdbb2d 100% ); /* Gradient colors */
+    -webkit-background-clip: text; /* Clip background to text */
+    background-clip: text; /* Clip background to text */
+    text-align: center; /* Center the text */
+    max-width: 75vw; /* Prevent text from overflowing */
+    word-wrap: break-word; /* Allow long words to break */
+}
+
+.bard-hello2 {
+    display: block; /* Make the span behave like a block element */
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2vw; /* Increased font size to 5% of viewport width */
+    font-weight: bold;
+    font-family:'Roboto','Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    opacity: 0;
+    animation: fadeInUp 1s forwards;
+    z-index: 1; /* Ensure it appears above messages */
+    color: transparent; /* Make text transparent for gradient */
+    background: linear-gradient(45deg,  #22c1c3 20%, #41c0ae 40%,#6bbf92 60%, #8abe7d 80%,#fdbb2d 100% ); /* Gradient colors */
+    -webkit-background-clip: text; /* Clip background to text */
+    background-clip: text; /* Clip background to text */
+    text-align: center; /* Center the text */
+    max-width: 75vw; /* Prevent text from overflowing */
+    word-wrap: break-word; /* Allow long words to break */
+}
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 100%;
+            overflow-y: auto; /* Enable vertical scroll for messages */
+            padding-top: 60px; /* Space for the intro message */
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 15px;
+            animation: slideIn 0.3s ease-out;
+            opacity: 0;
+            animation-fill-mode: forwards;
+            max-width: 70%;
+        }
+
+        .user-message {
+            background-color: #abf196; /* Light gray background */
+            color: black;
+            align-self: flex-end; /* Right-align the user's messages */
+            text-align: left; /* Left-align the text inside the message */
+            flex-direction: row-reverse; /* Place image on the right */
+        }
+
+        .bot-message {
+            background-color: #96c7f8;
+            color: black;
+            align-self: flex-start;
+            text-align: left;
+            flex-direction: row; /* Place image on the left */
+        }
+
+        .message img {
+            width: 35px;
+            height: 35px;
+            margin: 0 10px;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .input-buttons {
+            display: flex; /* or block depending on your layout */
+            flex-wrap: wrap; /* Allow buttons to wrap if necessary */
+            gap: 10px; /* Space between buttons */
+            background-color: #f0f2f5;
+        }
+        
+        .input-btn {
+            flex: 1; /* Each button takes equal width */
+            height: 100px; /* Set a fixed height to double */
+            width: 100px; /* Set a fixed width for square shape */
+            background-color: #ffffff; /* Background color */
+            border: 6px solid #afdaea; /* Border color */
+            border-radius: 20px; /* Slightly rounded corners */
+            padding: 10px; /* Padding inside the button */
+            cursor: pointer; /* Pointer cursor on hover */
+            margin: 5px; /* Space between buttons */
+            transition: background-color 0.3s; /* Smooth background color change */
+            outline: none; /* Remove the default focus outline */
+            box-shadow: none; /* Remove any box shadow */
+            display: flex; /* Use flexbox for content alignment */
+            align-items: center; /* Center items vertically */
+            justify-content: center; /* Center items horizontally */
+            font-size: 25px; /* Increase text size */
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+        
+        .input-btn:hover {
+            background-color: #abf196; /* Darken background on hover */
+        }
+
+        .input-container {
+            display: flex;
+            padding: 15px;
+            background-color: #f0f2f5;
+            border-top: 1px solid #ddd; /* Top border */
+            position: relative;
+            z-index: 10;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            margin-right: 10px;
+            font-style: italic;
+            font-size: 18px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #000105;
+        }
+
+        button {
+            padding: 10px 15px; /* Adjust padding for better click area */
+            border: none; /* Remove border */
+            background-color: #007bff; /* Button background color for other buttons */
+            color: rgb(0, 0, 0); /* Text color for other buttons */
+            font-family: 'Roboto', sans-serif; /* Use Roboto font for other buttons */
+            font-size: 16px; /* Font size for other buttons */
+            border-radius: 5px; /* Rounded corners for other buttons */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: transform 0.3s ease, opacity 0.3s ease; /* Transition effects */
+        }
+
+        button:hover {
+            transform: scale(1.05); /* Slightly enlarge on hover for other buttons */
+            opacity: 0.9; /* Slightly transparent on hover for other buttons */
+        }
+
+        #send-button {
+            background: url('static/60525.png') no-repeat center center; /* Set the send button icon */
+            background-size: contain; /* Ensure the icon fits within the button */
+            width: 45px; /* Width of the send button */
+            height: 45px; /* Height of the send button */
+            padding: 0; /* Remove default padding */
+            color: transparent; /* Hide text for the send button */
+            border-radius: 50%; /* Make it circular */
+        }
+
+        img {
+            width: 35px;
+            height: 35px;
+            margin-right: 10px;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 8px;
+            position: absolute;
+            top: 5px;
+            right: 10px;
+        }
+
+        
+
+        /* Collapsed Sidebar Styles */
+        .sidebar.collapsed {
+            width: 50px; /* Reduced width for collapsed state */
+        }
+
+        .sidebar.collapsed .chat-box, .sidebar.collapsed .chat-list {
+            display: none; /* Hide Chat 1 box and chat list when sidebar is collapsed */
+        }
+
+        .sidebar.collapsed .new-chat-btn {
+            margin-top: -20px; /* Adjust positioning when collapsed */
+        }
+
+        /* Scrollbar Styling (Optional) */
+        .sidebar::-webkit-scrollbar, .chat-window::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track, .chat-window::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb, .chat-window::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover, .chat-window::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Responsive Font Size for Introductory Message */
+        @media (max-width: 768px) {
+            .bard-hello {
+                font-size: 8vw; /* Increase font size on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <!-- New Top Buttons Container -->
+        <div class="top-buttons">
+            <button class="new-chat-btn" id="new-chat-btn"></button> <!-- New chat button -->
+            <div class="hamburger" id="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+        <div class="chat-box" id="chat-box">Chat History</div> <!-- Chat 1 Box -->
+        <div class="chat-list" id="chat-list">
+            <div class="chat-item active" data-chat-id="1">Chat 1
+                <button class="close-btn" title="Delete Chat">X</button> <!-- Close button -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="chat-container">
+        <div class="header">
+            <img src="static/logo.png" alt="Logo"> <!-- Updated to ai.jpg if needed -->
+            <h1 style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">GADFLY</h1>
+            <button id="help-button" class="help-btn"></button> <!-- help button -->
+            <button id="share-button" class="share-btn"></button> <!-- Share button -->
+            <button id="exit-button" class="exit-btn"></button> <!-- Exit button -->
+        </div>
+        <div class="chat-window">
+            <!-- New Introductory Message using <span> -->
+            <span _ngcontent-ng-c1874493643="" class="bard-hello ng-tns-c1874493643-2 ng-star-inserted">Hi, I'm Gadfly!</span>
+            <span _ngcontent-ng-c1874493643="" class="bard-hello2 ng-tns-c1874493643-2 ng-star-inserted">Your Socratic Personal Learning Assistant for <br> <b>Data Structures and Algorithms</b></span>
+            <div class="messages" id="messages"></div>
+        </div>
+        <div class="input-buttons">
+            <!-- Buttons will be dynamically generated here -->
+        </div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type your question or choose any of the guiding question above..." autofocus>
+            <button id="send-button"></button> <!-- Send button -->
+        </div>
+    </div>
+
+    <script>
+        // Chat Data Structure
+        let chats = {
+            1: {
+                name: "Chat 1",
+                messages: []
+            }
+        };
+        let currentChatId = 1;
+        let chatCounter = 1;
+
+        // DOM Elements
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const chatContainer = document.getElementById('chat-container');
+        const newChatButton = document.getElementById('new-chat-btn');
+        const chatBox = document.getElementById('chat-box');
+        const sendButton = document.getElementById('send-button');
+        const userInput = document.getElementById('user-input');
+        const help= document.getElementById('help-button');
+        const shareButton = document.getElementById('share-button');
+        const exitButton = document.getElementById('exit-button');
+        const messagesContainer = document.getElementById('messages');
+        const chatList = document.getElementById('chat-list');
+        const inputButtons = document.querySelector('.input-buttons');
+
+        // Initialize Chats
+        function initializeChats() {
+            chatList.innerHTML = ''; // Clear existing chats
+            for (let id in chats) {
+                createChatItem(id, chats[id].name);
+            }
+            setActiveChat(currentChatId);
+        }
+
+        // Create Chat Item in Sidebar
+        function createChatItem(id, name) {
+            const chatItem = document.createElement('div');
+            chatItem.classList.add('chat-item');
+            chatItem.setAttribute('data-chat-id', id);
+            chatItem.textContent = name;
+        
+            // Create Close Button
+            const closeButton = document.createElement('button');
+            closeButton.classList.add('close-btn');
+            closeButton.innerText = 'X'; // Close button text
+            closeButton.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent the chat item click event from firing
+                deleteChat(id); // Call the function to delete the chat
+            });
+        
+            chatItem.appendChild(closeButton); // Append close button to chat item
+            chatList.appendChild(chatItem);
+        
+            // Click Event to Switch Chats
+            chatItem.addEventListener('click', function() {
+                setActiveChat(id);
+            });
+        }
+
+        function deleteChat(id) {
+            delete chats[id]; // Remove chat from chats object
+            initializeChats(); // Re-initialize chats to update the display
+            if (currentChatId === id) {
+                currentChatId = null; // Reset current chat if it's deleted
+                messagesContainer.innerHTML = ''; // Clear messages
+            }
+        }
+
+        function setActiveChat(id) {
+            currentChatId = id;
+
+            // Highlight Active Chat
+            document.querySelectorAll('.chat-item').forEach(item => {
+                if (item.getAttribute('data-chat-id') == id) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            // Load Messages
+            loadMessages(id); // Ensure messages are loaded for the active chat
+
+            // Display Random Questions
+            displayRandomQuestions(); // Ensure questions are displayed for every chat
+        }
+        
+
+        // Load Messages for a Chat
+        function loadMessages(id) {
+            messagesContainer.innerHTML = ''; // Clear existing messages
+            chats[id].messages.forEach(message => {
+                displayMessage(message.text, message.sender);
+            });
+        }
+
+        // Display a Message in Chat Window
+        function displayMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+
+            // Create Image Element
+            const img = document.createElement('img');
+            img.src = sender === 'user' ? 'static/me.png' : 'static/logo.png';
+            img.alt = sender === 'user' ? 'User' : 'AI';
+            
+            // Create Text Span
+            const textSpan = document.createElement('span');
+            textSpan.textContent = text;
+
+            // Append Image and Text to Message Div
+            messageDiv.appendChild(img);
+            messageDiv.appendChild(textSpan);
+
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Auto scroll to bottom
+        }
+
+        // Send Message Function
+        // Send Message Function
+async function sendMessage(messageText = null) {
+    const text = messageText !== null ? messageText.trim() : userInput.value.trim();
+
+    if (text) {
+        // Hide the introductory message
+        const helloMessage = document.querySelector('.bard-hello');
+        const helloMessage2 = document.querySelector('.bard-hello2');
+
+        if (helloMessage) helloMessage.style.display = 'none';
+        if (helloMessage2) helloMessage2.style.display = 'none';
+
+        // Hide input buttons
+        const inputButtons = document.querySelector('.input-buttons');
+        if (inputButtons) inputButtons.style.display = 'none';
+
+        // Add User Message to Current Chat
+        chats[currentChatId].messages.push({ text: text, sender: 'user' });
+        displayMessage(text, 'user');
+
+        // Clear input field and placeholder after sending
+        userInput.value = ''; 
+        userInput.placeholder = ''; // Clear placeholder text
+
+        // Fetch answer from the Flask backend
+        try {
+            const response = await fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `query=${encodeURIComponent(text)}`
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json(); // Parse JSON response
+            const botReply = data.summary || "I'm sorry, I couldn't process that.";
+
+            // Add Bot Message to Current Chat
+            chats[currentChatId].messages.push({ text: botReply, sender: 'bot' });
+            displayMessage(botReply, 'bot');
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            const errorMsg = "Sorry, I'm having trouble fetching a response right now.";
+            chats[currentChatId].messages.push({ text: errorMsg, sender: 'bot' });
+            displayMessage(errorMsg, 'bot');
+        }
+    }
+}
+
+        
+
+        // Handle Input Buttons Click
+        document.querySelectorAll('.input-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const text = this.innerText;
+                userInput.value = text;
+                inputButtons.style.display = 'none'; // Hide input buttons
+                sendMessage(text);
+                userInput.value = ''; // Clear the input field after sending
+            });
+        });
+
+        // Handle Send Button Click
+        sendButton.addEventListener('click', () => {
+            sendMessage();
+        });
+
+        // Handle Enter Key Press
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Handle Hamburger Click to Toggle Sidebar
+        hamburger.addEventListener('click', () => {
+            const isCollapsed = sidebar.classList.toggle('collapsed'); // Toggle the 'collapsed' class
+
+            if (isCollapsed) {
+                chatContainer.style.width = 'calc(100% - 50px)'; // Adjust chatbox width when collapsed
+                newChatButton.classList.add('hidden'); // Hide the new chat button
+            } else {
+                chatContainer.style.width = 'calc(100% - 200px)'; // Expand chatbox when sidebar is open
+                newChatButton.classList.remove('hidden'); // Show the new chat button
+            }
+        });
+
+        // Handle New Chat Button Click
+        newChatButton.addEventListener('click', () => {
+            chatCounter += 1;
+            const newChatId = chatCounter;
+            const newChatName = `Chat ${newChatId}`;
+            chats[newChatId] = {
+                name: newChatName,
+                messages: []
+            };
+            createChatItem(newChatId, newChatName);
+            setActiveChat(newChatId);
+        });
+
+        // Handle Exit Button Click
+        exitButton.addEventListener('click', () => {
+            window.history.back(); // Go back to the previous page
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+        // Handle Help Button Click
+        const helpButton = document.getElementById('help-button');
+            
+        // Check if the button exists
+        if (helpButton) {
+            helpButton.addEventListener('click', () => {
+                window.open('static/help.html', '_blank'); // Open help.html in a new tab
+
+            });
+        }
+        });
+       
+
+        // Handle Share Button Click
+        shareButton.addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Gadfly - Your Learning Assistant',
+                    text: 'Check out this awesome learning assistant for Data Structures and Algorithms!',
+                    url: window.location.href, // Share the current page URL
+                })
+                .then(() => {
+                    console.log('Share successful');
+                })
+                .catch((error) => {
+                    console.error('Error sharing:', error);
+                });
+            } else {
+                alert('Sharing not supported in this browser.'); // Fallback for browsers that don't support Web Share API
+            }
+        });
+
+        // Display Default Message on Load
+        window.onload = function() {
+            initializeChats();
+        };
+
+        const questions = [
+    "'What is an Array?'",
+    "'What is time and space complexity?'",
+    "'What is a Binary Search Tree?'",
+    "'Why is recursion important?'",
+    "'What is dynamic programming?'",
+    "'What is the difference between a stack and a queue?'",
+    "'What is a hash table?'",
+    "'What is quicksort?'",
+    "'What is a linked list?'",
+    "'What is Depth-First Search (DFS)?'",
+    "'What is Breadth-First Search (BFS)?'",
+    "'What is a heap and its applications?'",
+    "'What is a priority queue?'",
+    "'What is merge sort?'",
+    "'What is the difference between merge sort and quicksort?'",
+    "'What are graph traversal algorithms?'",
+    "'What is an AVL tree?'",
+    "'What is Dijkstra's algorithm?'",
+    "'What is a Red-Black tree?'",
+    "'What is a Trie data structure?'",
+    "'What is the Bellman-Ford algorithm?'",
+    "'What are greedy algorithms?'",
+    "'What is Kruskal's algorithm?'",
+    "'What is Prim's algorithm?'",
+    "'What is backtracking?'",
+    "'What is memoization?'",
+    "'What is the Floyd-Warshall algorithm?'"
+];
+
+function getRandomQuestions() {
+    const shuffled = [...questions].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 3);
+}
+
+function displayRandomQuestions() {
+    const randomQuestions = getRandomQuestions();
+    inputButtons.style.display = 'flex'; // Ensure the input buttons are displayed
+    inputButtons.innerHTML = ''; // Clear previous questions
+
+    randomQuestions.forEach(question => {
+        const questionBtn = document.createElement('button');
+        questionBtn.classList.add('input-btn');
+        questionBtn.innerText = question;
+        inputButtons.appendChild(questionBtn);
+
+        // Add Event Listener to Each Button
+        questionBtn.addEventListener('click', function() {
+            userInput.value = question;
+            inputButtons.style.display = 'none'; // Hide the input buttons after selection
+            sendMessage(question);
+        });
+    });
+}
+</script>
+   
+</body>
+</html>
