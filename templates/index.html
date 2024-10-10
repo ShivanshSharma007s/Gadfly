@@ -168,7 +168,7 @@
         }
 
         .help-btn:hover {
-            opacity: 0.8; /* Change opacity on hover for visual feedback */
+            transform: scale(1.1); /* Slightly scale the image on hover */
         }
 
 
@@ -186,7 +186,7 @@
         }
 
         .share-btn:hover {
-            opacity: 0.8; /* Change opacity on hover for visual feedback */
+            transform: scale(1.1); /* Slightly scale the image on hover */
         }
 
         .exit-btn {
@@ -203,7 +203,7 @@
         }
 
         .exit-btn:hover {
-            opacity: 0.8; /* Change opacity on hover for visual feedback */
+            transform: scale(1.1); /* Slightly scale the image on hover */
         }
 
         .chat-window {
@@ -426,11 +426,173 @@
             cursor: pointer;
             margin-left: 8px;
             position: absolute;
-            top: 5px;
+            top: 2px;
             right: 10px;
         }
 
+        .voice-btn {
+            cursor: pointer;
+            width: 50px; /* Adjust the width as needed */
+            height: 50px; /* Adjust the height as needed */
+            margin-left: 5px; /* Space between the input and voice button */
+            margin-top: 5px; /* Position the button 2px below the input */
+            transition: transform 0.2s; /* Smooth transition for hover effect */
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+
+        .mic-popup {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 999; /* Sit on top */
+            left: 50%; /* Center horizontally */
+            top: 50%; /* Center vertically */
+            width: 50%; /* Adjust width as needed */
+            height: auto; /* Adjust height automatically */
+            transform: translate(-50%, -50%); /* Move back by half its width and height */
+            background-color: rgba(0, 0, 0, 0.6); /* Darker black with more opacity */
+            border-radius: 15px; /* Rounded corners for the whole popup */
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+            backdrop-filter: blur(5px); /* Slight background blur effect */
+            transition: all 0.3s ease; /* Smooth transition */
+        }
         
+        .mic-popup-content {
+            background-color: #fff; /* White background for content */
+            padding: 30px; /* More padding for spacing */
+            border-radius: 10px; /* Rounded corners for the content box */
+            border: none; /* Remove border */
+            width: 120%; /* Adjust width of content */
+            max-width: 1000px; /* Maximum width for responsiveness */
+            text-align: center; /* Center align text */
+            margin: 0 auto; /* Center content within the popup */
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.15); /* Light shadow around content */
+            font-family: 'Roboto', sans-serif; /* Use Roboto for cleaner look */
+        }
+        
+        .mic-popup p {
+            font-size: 1.2em; /* Larger font for the text */
+            color: #333; /* Dark gray text color */
+            margin-bottom: 15px; /* Space below the text */
+        }
+        
+        .close-popup {
+            color: #888; /* Gray color for close button */
+            float: right; /* Float to the right */
+            font-size: 24px; /* Font size for close button */
+            font-weight: bold; /* Bold text */
+            cursor: pointer; /* Hand cursor for interactive feel */
+            transition: color 0.2s ease; /* Smooth color transition */
+        }
+        
+        .close-popup:hover,
+        .close-popup:focus {
+            color: #f44336; /* Red hover effect */
+            text-decoration: none; /* Remove underline */
+        }
+        
+        .mic-popup .transcript {
+            background-color: #f0f0f0; /* Light gray background for transcript text */
+            padding: 15px; /* Padding inside the transcript box */
+            border-radius: 8px; /* Rounded corners */
+            font-size: 1em; /* Normal font size */
+            color: #555; /* Darker gray text */
+            border: 1px solid #ddd; /* Light border around transcript */
+            margin-top: 20px; /* Spacing above the transcript */
+            box-shadow: inset 0px 2px 6px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+        }
+
+        .profile-box {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-top: 1px solid #ccc; /* Optional: to separate the profile box */
+            margin-top: auto; /* This pushes the profile box to the bottom */
+        }
+        
+        .profile-photo {
+            width: 40px; /* Adjust size as needed */
+            height: 40px; /* Adjust size as needed */
+            border-radius: 50%; /* Make it circular */
+            margin-right: 10px; /* Space between photo and name */
+        }
+        
+        .profile-name {
+            font-size: 16px; /* Adjust font size as needed */
+            font-weight: bold; /* Make the name bold */
+            color: white; /* Change text color to white */
+        }
+
+        .mute-btn {
+            background: none; /* No background */
+            border: none; /* No border */
+            cursor: pointer; /* Pointer cursor */
+            position: absolute; /* Position it absolutely */
+            right: 200px; /* Position from the right */
+            top: 20px; /* Position from the top */
+            padding: 0; /* No padding */
+        }
+        
+        .mute-btn img {
+            width: 40px; /* Adjust the width of the image */
+            height: auto; /* Maintain aspect ratio */
+            transition: transform 0.2s; /* Transition effect */
+        }
+        
+        .mute-btn:hover img {
+            transform: scale(1.1); /* Slightly scale the image on hover */
+        }
+
+        .download-btn {
+            background: url('static/refrence.png') no-repeat center; /* Ensure you have a download.png icon */
+            background-size: contain; /* Ensure the icon fits within the button */
+            width: 45px; /* Width of the exit button */
+            height: 40px; /* Height of the exit button */
+            border: none; /* Remove border */
+            cursor: pointer; /* Pointer cursor on hover */
+            position: absolute; /* Position it absolutely */
+            right: 280px; /* Position from the right */
+            top: 20px; /* Position from the top */
+            z-index: 10; /* Keep it above other elements */
+        }
+
+        .download-btn:hover {
+            transform: scale(1.1); /* Slightly scale the image on hover */
+        }
+        .reference-btn {
+            background-color: transparent; /* Transparent background */
+            color: black; /* Black text color */
+            border: 2px solid black; /* Black outline */
+            width: 120px; /* Adjust width as needed */
+            height: 40px; /* Increase height for better centering */
+            cursor: pointer;
+            margin-left: 10px;
+            position: absolute;
+            right: 350px;
+            top: 20px;
+            font-family: 'Roboto', sans-serif; /* Use Roboto font */
+            font-size: 14px;
+            font-weight: bold; /* Make the text bold */
+            text-align: center; /* Center the text horizontally */
+            line-height: 40px; /* Vertically center the text */
+            padding: 0; /* Remove default padding */
+        }
+        
+        
+        
+
+        .reference-btn {
+            transform: scale(1.1); /* Slightly scale the image on hover */
+        }
+
+
+        .reference-btn:hover {
+            background-color: #6e8ae8; /* Darken background on hover */
+        }
+        
+
 
         /* Collapsed Sidebar Styles */
         .sidebar.collapsed {
@@ -490,15 +652,29 @@
                 <button class="close-btn" title="Delete Chat">X</button> <!-- Close button -->
             </div>
         </div>
+
+        <!-- Profile Box -->
+        <div class="profile-box" id="profile-box">
+            <img src="static/me.jpg" alt="User Photo" class="profile-photo">
+            <div class="profile-name">Guest User</div> <!-- Replace with your name or username -->
+        </div>
     </div>
 
     <div class="container" id="chat-container">
         <div class="header">
             <img src="static/logo.png" alt="Logo"> <!-- Updated to ai.jpg if needed -->
             <h1 style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">GADFLY</h1>
-            <button id="help-button" class="help-btn"></button> <!-- help button -->
-            <button id="share-button" class="share-btn"></button> <!-- Share button -->
-            <button id="exit-button" class="exit-btn"></button> <!-- Exit button -->
+            <button id="reference-button" class="reference-btn" title="Open DSA PDF">Reference Book</button> <!-- Reference button -->
+
+            <button id="download-button" class="download-btn" title="Download Chats"></button> <!-- Download button -->
+            <!-- Mute Button -->
+            <button id="mute-button" class="mute-btn" title="Mute/Unmute">
+                <img src="static/speaker.png" alt="Speaker" id="mute-image"> <!-- Initial image -->
+            </button>
+            
+            <button id="help-button" class="help-btn" title="Help"></button> <!-- Help button -->
+            <button id="share-button" class="share-btn" title="Share"></button> <!-- Share button -->
+            <button id="exit-button" class="exit-btn" title="Exit"></button> <!-- Exit button -->
         </div>
         <div class="chat-window">
             <!-- New Introductory Message using <span> -->
@@ -510,12 +686,86 @@
             <!-- Buttons will be dynamically generated here -->
         </div>
         <div class="input-container">
-            <input type="text" id="user-input" placeholder="Type your question or choose any of the guiding question above..." autofocus>
+            <input type="text" id="user-input" placeholder="Type your question or choose any of the guiding questions above..." autofocus>
             <button id="send-button"></button> <!-- Send button -->
+            <!-- Voice Button -->
+            <img src="static/voice.png" alt="Voice" id="voice-button" class="voice-btn" title="Voice Input" style="cursor:pointer; width: 30px; height: 30px; margin-left: 5px;">
+        </div>
+
+        <div id="mic-popup" class="mic-popup">
+            <div class="mic-popup-content">
+                <span class="close-popup" id="close-popup">&times;</span>
+                <p id="mic-transcript">Listening... Please speak your message.</p>
+            </div>
         </div>
     </div>
 
+
+    
+
+
     <script>
+
+        document.getElementById('reference-button').addEventListener('click', function () {
+            window.open('static/pdfs/Dsa.pdf', '_blank');
+        });
+        
+
+        document.getElementById('download-button').addEventListener('click', function () {
+            const messagesContainer = document.getElementById('messages');
+            const messages = messagesContainer.children; // Get all message elements
+            let formattedContent = ''; // Initialize an empty string for formatted content
+        
+            // Iterate through the messages
+            for (let i = 0; i < messages.length; i++) {
+                const message = messages[i];
+                const isUserMessage = message.classList.contains('user-message'); // Check if it's a user message
+                
+                // Format the message according to its sender
+                if (isUserMessage) {
+                    formattedContent += `USER: "${message.innerText}"\n`; // Format user message
+                } else {
+                    formattedContent += `GADFLY: "${message.innerText}"\n`; // Format Gadfly message
+                }
+            }
+        
+            const blob = new Blob([formattedContent], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'chat-history.txt'; // File name
+            link.click();
+        });
+        
+        
+
+
+     // Initial mute state
+let isMuted = false;
+
+// Function to toggle the mute state
+function toggleMute() {
+    const muteImage = document.getElementById('mute-image');
+    
+    // Toggle mute state
+    isMuted = !isMuted; 
+
+    // Update the image based on the mute state
+    if (isMuted) {
+        muteImage.src = 'static/mute.png'; // Show mute image
+        // Stop speaking if muted
+        window.speechSynthesis.cancel(); // Stop any ongoing speech
+    } else {
+        muteImage.src = 'static/speaker.png'; // Show speaker image
+    }
+}
+
+
+
+// Add event listener to the button   
+
+    // Add event listener to the button
+    document.getElementById('mute-button').addEventListener('click', toggleMute);
+
         // Chat Data Structure
         let chats = {
             1: {
@@ -540,6 +790,67 @@
         const messagesContainer = document.getElementById('messages');
         const chatList = document.getElementById('chat-list');
         const inputButtons = document.querySelector('.input-buttons');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.interimResults = true; // Enable interim results
+            recognition.lang = 'en-US'; // Set the language
+
+            const voiceButton = document.getElementById('voice-button');
+            const userInput = document.getElementById('user-input');
+            const micPopup = document.getElementById('mic-popup');
+            const closePopupBtn = document.getElementById('close-popup');
+
+            // Function to show the microphone popup
+            function showMicPopup() {
+                micPopup.style.display = 'block';
+            }
+
+            // Function to hide the microphone popup
+            function hideMicPopup() {
+                micPopup.style.display = 'none';
+            }
+
+            // Start speech recognition on button click
+            voiceButton.addEventListener('click', () => {
+                recognition.start();
+                showMicPopup(); // Show the popup when the microphone is activated
+            });
+
+            // When speech is recognized
+            recognition.addEventListener('result', (event) => {
+                const transcript = event.results[0][0].transcript; // Get the recognized text
+                userInput.value = transcript; // Set the input field value to the recognized text
+                document.getElementById('mic-transcript').textContent = transcript; // Update the popup with the recognized text
+            });
+
+            // Handle end of speech recognition and simulate "Enter" key press
+            recognition.addEventListener('end', () => {
+                hideMicPopup(); // Hide the popup when recognition ends
+                recognition.stop(); // Stop recognition when done
+
+                // Simulate Enter key press event
+                const enterEvent = new KeyboardEvent('keypress', { key: 'Enter' });
+                userInput.dispatchEvent(enterEvent); // Dispatch the event to trigger the sendMessage function
+            });
+
+            // Close the popup when the user clicks on <span> (x)
+            closePopupBtn.addEventListener('click', () => {
+                hideMicPopup(); // Hide the popup
+                recognition.stop(); // Stop recognition when the popup is closed
+            });
+
+            // Close the popup when the user clicks anywhere outside of the modal
+            window.addEventListener('click', (event) => {
+                if (event.target === micPopup) {
+                    hideMicPopup();
+                    recognition.stop(); // Stop recognition if the user clicks outside the popup
+                }
+            });
+        } else {
+            console.log("SpeechRecognition not supported in this browser.");
+        }
 
         // Initialize Chats
         function initializeChats() {
@@ -636,58 +947,89 @@
 
         // Send Message Function
         // Send Message Function
-async function sendMessage(messageText = null) {
-    const text = messageText !== null ? messageText.trim() : userInput.value.trim();
-
-    if (text) {
-        // Hide the introductory message
-        const helloMessage = document.querySelector('.bard-hello');
-        const helloMessage2 = document.querySelector('.bard-hello2');
-
-        if (helloMessage) helloMessage.style.display = 'none';
-        if (helloMessage2) helloMessage2.style.display = 'none';
-
-        // Hide input buttons
-        const inputButtons = document.querySelector('.input-buttons');
-        if (inputButtons) inputButtons.style.display = 'none';
-
-        // Add User Message to Current Chat
-        chats[currentChatId].messages.push({ text: text, sender: 'user' });
-        displayMessage(text, 'user');
-
-        // Clear input field and placeholder after sending
-        userInput.value = ''; 
-        userInput.placeholder = ''; // Clear placeholder text
-
-        // Fetch answer from the Flask backend
-        try {
-            const response = await fetch('/search', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `query=${encodeURIComponent(text)}`
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+        async function sendMessage(messageText = null) {
+            const text = messageText !== null ? messageText.trim() : userInput.value.trim();
+        
+            if (text) {
+                // Hide the introductory message
+                const helloMessage = document.querySelector('.bard-hello');
+                const helloMessage2 = document.querySelector('.bard-hello2');
+        
+                if (helloMessage) helloMessage.style.display = 'none';
+                if (helloMessage2) helloMessage2.style.display = 'none';
+                
+                // Hide input buttons
+                const inputButtons = document.querySelector('.input-buttons');
+                if (inputButtons) inputButtons.style.display = 'none';
+        
+                // Add User Message to Current Chat
+                chats[currentChatId].messages.push({ text: text, sender: 'user' });
+                displayMessage(text, 'user');
+        
+                // Clear input field and placeholder after sending
+                userInput.value = ''; 
+                userInput.placeholder = ''; // Clear placeholder text
+        
+                // Fetch answer from the Flask backend
+                try {
+                    const response = await fetch('/search', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `query=${encodeURIComponent(text)}`
+                    });
+        
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+        
+                    const data = await response.json(); // Parse JSON response
+                    const botReply = data.summary || "I'm sorry, I couldn't process that.";
+        
+                    // Add Bot Message to Current Chat
+                    chats[currentChatId].messages.push({ text: botReply, sender: 'bot' });
+                    displayMessage(botReply, 'bot');
+        
+                    // Speak the bot reply
+                    speak(botReply); // Call the speak function with the bot's reply
+        
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    const errorMsg = "Sorry, I'm having trouble fetching a response right now.";
+                    chats[currentChatId].messages.push({ text: errorMsg, sender: 'bot' });
+                    displayMessage(errorMsg, 'bot');
+        
+                    // Speak the error message
+                    speak(errorMsg); // Call the speak function with the error message
+                }
             }
-
-            const data = await response.json(); // Parse JSON response
-            const botReply = data.summary || "I'm sorry, I couldn't process that.";
-
-            // Add Bot Message to Current Chat
-            chats[currentChatId].messages.push({ text: botReply, sender: 'bot' });
-            displayMessage(botReply, 'bot');
-
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            const errorMsg = "Sorry, I'm having trouble fetching a response right now.";
-            chats[currentChatId].messages.push({ text: errorMsg, sender: 'bot' });
-            displayMessage(errorMsg, 'bot');
         }
-    }
-}
+        
+        
+            // Function to speak text
+            function speak(text) {
+                if (isMuted) return; // Don't speak if muted
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US'; // Set the language
+                
+                // Detect if the user is on an Android device
+                const isAndroid = /Android/i.test(navigator.userAgent);
+                
+                if (isAndroid) {
+                    utterance.rate = 1; // Set the speed to 1.0 for Android devices
+                } else {
+                    utterance.rate = 1.8; // Set the speed to 1.8 for other devices
+                }
+                
+                utterance.pitch = 1; // Set the pitch (1.0 is default, keep it neutral)
+                utterance.volume = 1; // Set volume (1.0 is the maximum volume)
+                
+                window.speechSynthesis.speak(utterance); // Speak the text
+            }
+            
+        
 
         
 
@@ -762,7 +1104,7 @@ async function sendMessage(messageText = null) {
         shareButton.addEventListener('click', () => {
             if (navigator.share) {
                 navigator.share({
-                    title: 'Gadfly - Your Learning Assistant',
+                    title: 'Gadfly - Your Socratic Personal Learning Assistant',
                     text: 'Check out this awesome learning assistant for Data Structures and Algorithms!',
                     url: window.location.href, // Share the current page URL
                 })
